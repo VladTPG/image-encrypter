@@ -1,0 +1,36 @@
+services:
+  app:
+    build: ./app
+    ports:
+      - "5173:5173"
+      - "8080:8080"
+    depends_on:
+      - storage
+      - broker
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://storage:3306/imageencrypter
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=broker
+  broker:
+    build: ./broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  mpi-worker:
+    build: ./mpi-worker
+    depends_on:
+      - subscriber
+  subscriber:
+    build: ./subscriber
+    depends_on:
+      - broker
+  storage:
+    build: ./storage
+    ports:
+      - "3000:3000"
+      - "3306:3306"
+      - "27017:27017"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=imageencrypter

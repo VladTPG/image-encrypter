@@ -1,0 +1,1 @@
+FROM critoma/amd64_u24_noble_ism_security

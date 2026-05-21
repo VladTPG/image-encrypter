@@ -1,7 +1,7 @@
 FROM critoma/amd64_u24_noble_ism_security
-RUN apt-get update && apt-get install -y openjdk-21-jdk supervisor maven curl && \        
-      curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \                        
-      apt-get install -y nodejs    
+RUN apt-get update && apt-get install -y openjdk-21-jdk supervisor maven curl && \
+      curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+      apt-get install -y nodejs
 WORKDIR /app
 
 COPY ./backend/pom.xml ./backend/pom.xml

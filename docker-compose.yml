@@ -1,6 +1,7 @@
 services:
   app:
     build: ./app
+    hostname: app
     ports:
       - "5173:5173"
       - "8080:8080"
@@ -8,25 +9,36 @@ services:
       - storage
       - broker
     environment:
+      - SPRING_RABBITMQ_HOST=broker
       - SPRING_DATASOURCE_URL=jdbc:mysql://storage:3306/imageencrypter
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_RABBITMQ_HOST=broker
+
   broker:
     build: ./broker
+    hostname: broker
     ports:
       - "5672:5672"
       - "15672:15672"
-  mpi-worker:
-    build: ./mpi-worker
-    depends_on:
-      - subscriber
+
   subscriber:
     build: ./subscriber
+    hostname: subscriber
     depends_on:
       - broker
+      - storage
+      - mpi-worker
+    environment:
+      - RABBITMQ_HOST=broker
+      - STORAGE_HOST=storage
+
+  mpi-worker:
+    build: ./mpi-worker
+    hostname: mpi-worker
+
   storage:
     build: ./storage
+    hostname: storage
     ports:
       - "3000:3000"
       - "3306:3306"
